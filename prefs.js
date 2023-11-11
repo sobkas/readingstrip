@@ -17,20 +17,18 @@
 */
 'use strict';
 
-const { Gio, Gtk, Gdk } = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-
-const Me = ExtensionUtils.getCurrentExtension();
-const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
-const _ = Gettext.gettext;
+import Gio from 'gi://Gio'
+import Gtk from 'gi://Gtk'
+import Gdk from 'gi://Gdk'
+import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 function init (){
-	ExtensionUtils.initTranslations();
+	ExtensionPreferences.initTranslations();
 	return new buildPrefsWidget();
 }
 
 function buildPrefsWidget() {
-	this.settings = ExtensionUtils.getSettings();
+	this.settings = ExtensionPreferences.getSettings();
 	let prefsWidget = new Gtk.Grid({
 		margin_start: 5,
 		margin_end: 5,

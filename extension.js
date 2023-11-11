@@ -15,12 +15,19 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-const { St, Clutter, GObject, Meta, Shell, Gio } = imports.gi;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const pointerWatcher = imports.ui.pointerWatcher.getPointerWatcher();
-const ExtensionUtils = imports.misc.extensionUtils;
-const Extension = ExtensionUtils.getCurrentExtension();
+'use strict';
+
+import St from 'gi://St'
+import Clutter from 'gi://Clutter'
+import GObject from 'gi://GObject'
+import Meta from 'gi://Meta'
+import Shell from 'gi://Shell'
+import Gio from 'gi://Gio'
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PointerWatcher from 'resource:///org/gnome/shell/ui/pointerWatcher.js';
+import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+const pointerWatcher = PointerWatcher.getPointerWatcher();
 const interval = 1000 / 60;
 const panelButtonIcon_on = Gio.icon_new_for_string(`${Extension.path}/icons/readingstrip-on-symbolic.svg`);
 const panelButtonIcon_off = Gio.icon_new_for_string(`${Extension.path}/icons/readingstrip-off-symbolic.svg`);
@@ -94,9 +101,9 @@ function toggleReadingStrip() {
 	focus_down.visible = strip_h.visible;
 	settings.set_boolean('enabled', strip_h.visible);
 }
-
-function enable() {
-    settings = ExtensionUtils.getSettings();
+export default class ReadingStripExt extends Extension {
+    enable() {
+        settings = this.getSettings();
 
 	// add button to top panel
 	panelButton = new ReadingStrip();
@@ -177,9 +184,9 @@ function enable() {
 
 	// sync with current monitor
 	syncStrip(true);
-}
+    }
 
-function disable() {
+    disable() {
 	// remove monitor change watch
 	if (monitor_change_signal_id)
 		Main.layoutManager.disconnect(monitor_change_signal_id);
@@ -208,4 +215,5 @@ function disable() {
 	focus_up = null
 	focus_down.destroy();
 	focus_down = null;
+    }
 }
